@@ -52,6 +52,15 @@ public final class Notez {
                         System.err.println("Error: category called without category/note");
                     }
                     break;
+                case "-f":
+                    if(argv.length == 2){
+                        ntzEngine.removeCategory(argv[1]);
+                    }else if(argv.length == 3){
+                        ntzEngine.removeNote(argv[1], Integer.parseInt(argv[2]));
+                    }else{
+                        System.err.println("Error: forget called with improper arguments");
+                    }
+                    break;
                 default:
                     System.err.printf("%s is not a valid command", argv[0]);
             }
@@ -106,6 +115,14 @@ public final class Notez {
 
     public void generalEntry(String note){
         filemap.get("General").add(note);
+    }
+
+    public void removeCategory(String category){
+        filemap.remove(category);
+    }
+
+    public void  removeNote(String category, int note){
+        filemap.get(category).remove(note - 1);
     }
 
     public void help(){
