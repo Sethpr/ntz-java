@@ -40,11 +40,17 @@ public final class Notez {
                         ntzEngine.generalEntry(argv[1]);
                     } catch (ArrayIndexOutOfBoundsException e) {
                         System.err.println("Error: remember called without note");
-
                     }
                     break;
                 case "-h":
                     ntzEngine.help();
+                    break;
+                case "-c":
+                    try {
+                        ntzEngine.categoryEntry(argv[1], argv[2]);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.err.println("Error: category called without category/note");
+                    }
                     break;
                 default:
                     System.err.printf("%s is not a valid command", argv[0]);
@@ -61,8 +67,6 @@ public final class Notez {
         filemap.get("note2").add("A more secret third note");
     }
 
-    private void addToCategory(String string, String[] argv) {
-    }
 
     private void saveDatabase() {
         filemap.save();
@@ -91,8 +95,8 @@ public final class Notez {
     /*
      * Put all your additional methods that implement commands like forget here...
      */
-    public void makeEntry(String category, String note){
-        if(filemap.containsKey(category)){
+    public void categoryEntry(String category, String note){
+        if(!filemap.containsKey(category)){
             filemap.put(category,new NoteList(note));
         }else{
             filemap.get(category).add(note);
