@@ -1,5 +1,9 @@
 package rocks.zipcode;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * ntz main command.
  */
@@ -12,8 +16,8 @@ public final class Notez {
     }
     /**
      * Says hello to the world.
-     * 
-     * @param args The arguments of the program.
+     *
+     * @param argv The arguments of the program.
      */
     public static void main(String argv[]) {
         boolean _debug = true;
@@ -32,13 +36,13 @@ public final class Notez {
 
         /*
          * You will spend a lot of time right here.
-         * 
+         *
          * instead of loadDemoEntries, you will implement a series
          * of method calls that manipulate the Notez engine.
          * See the first one:
          */
-        ntzEngine.loadDemoEntries();
-
+        //ntzEngine.loadDemoEntries();
+        //ntzEngine.oneEntry();
         ntzEngine.saveDatabase();
 
         if (argv.length == 0) { // there are no commandline arguments
@@ -56,6 +60,10 @@ public final class Notez {
 
     }
 
+    private void oneEntry() { //this is for adding stuff to test with
+        filemap.get("note2").add("A more secret third note");
+    }
+
     private void addToCategory(String string, String[] argv) {
     }
 
@@ -68,7 +76,13 @@ public final class Notez {
     }
 
     public void printResults() {
-        System.out.println(this.filemap.toString());
+        Set entries = filemap.keySet();
+        for(Object key : entries){
+            System.out.println(key + ":");
+            for(String values : filemap.get(key)){
+                System.out.println("\t"+values);
+            }
+        }
     }
 
     public void loadDemoEntries() {
@@ -80,5 +94,12 @@ public final class Notez {
     /*
      * Put all your additional methods that implement commands like forget here...
      */
+    public void makeEntry(String category, String note){
+        if(filemap.containsKey(category)){
+            filemap.put(category,new NoteList(note));
+        }else{
+            filemap.get(category).add(note);
+        }
+    }
 
 }
