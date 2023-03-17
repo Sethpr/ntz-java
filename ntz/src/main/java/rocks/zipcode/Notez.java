@@ -33,30 +33,27 @@ public final class Notez {
         Notez ntzEngine = new Notez();
 
         ntzEngine.loadDatabase();
+        try {
+            switch (argv[0]) {
+                case "-r":
+                    try {
+                        ntzEngine.generalEntry(argv[1]);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.err.println("Error: remember called without note");
 
-        /*
-         * You will spend a lot of time right here.
-         *
-         * instead of loadDemoEntries, you will implement a series
-         * of method calls that manipulate the Notez engine.
-         * See the first one:
-         */
-        //ntzEngine.loadDemoEntries();
-        //ntzEngine.oneEntry();
-        ntzEngine.saveDatabase();
-
-        if (argv.length == 0) { // there are no commandline arguments
-            //just print the contents of the filemap.
+                    }
+                    break;
+                case "-h":
+                    ntzEngine.help();
+                    break;
+                default:
+                    System.err.printf("%s is not a valid command", argv[0]);
+            }
+        }catch (ArrayIndexOutOfBoundsException e){
             ntzEngine.printResults();
-        } else {
-            if (argv[0].equals("-r")) {
-                ntzEngine.addToCategory("General", argv);
-            } // this should give you an idea about how to TEST the Notez engine
-              // without having to spend lots of time messing with command line arguments.
         }
-        /*
-         * what other method calls do you need here to implement the other commands??
-         */
+
+        ntzEngine.saveDatabase();
 
     }
 
@@ -79,8 +76,8 @@ public final class Notez {
         Set entries = filemap.keySet();
         for(Object key : entries){
             System.out.println(key + ":");
-            for(String values : filemap.get(key)){
-                System.out.println("\t"+values);
+            for (int i = 0; i < filemap.get(key).size(); i++) {
+                System.out.printf("\t%d) %s\n", i + 1, filemap.get(key).get(i));
             }
         }
     }
@@ -101,5 +98,19 @@ public final class Notez {
             filemap.get(category).add(note);
         }
     }
+
+
+    public void generalEntry(String note){
+        filemap.get("General").add(note);
+    }
+
+    public void help(){
+        System.out.println("-h: prints out help info");
+        System.out.println("-r: takes a string argument and adds it to general notes");
+        System.out.println("-c: creates or appends to specified category with specific note");
+        System.out.println("-f: forgets a category by name or note by category name and number");
+        System.out.println("-e: edits a note specified by category and number");
+    }
+
 
 }
