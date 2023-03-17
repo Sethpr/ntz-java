@@ -1,5 +1,6 @@
 package rocks.zipcode;
 
+import java.sql.SQLOutput;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -59,6 +60,13 @@ public final class Notez {
                         ntzEngine.removeNote(argv[1], Integer.parseInt(argv[2]));
                     }else{
                         System.err.println("Error: forget called with improper arguments");
+                    }
+                    break;
+                case "-e":
+                    try{
+                        ntzEngine.editNote(argv[1], Integer.parseInt(argv[2]), argv[3]);
+                    }catch (ArrayIndexOutOfBoundsException e){
+                        System.err.println("Error: edit called with improper arguments");
                     }
                     break;
                 default:
@@ -123,6 +131,18 @@ public final class Notez {
 
     public void  removeNote(String category, int note){
         filemap.get(category).remove(note - 1);
+    }
+
+    public void editNote(String category, int noteNum, String note){
+        if(filemap.containsKey(category)){
+            if(filemap.get(category).size() >= noteNum){
+                filemap.get(category).set(noteNum-1, note);
+            }else{
+                System.err.println("Error: note out of range");
+            }
+        }else{
+            System.err.println("Error: category does not exist");
+        }
     }
 
     public void help(){
